@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SensorCatalogue>
+  <Sensor>
+    <Type>Temperature</Type>
+    <Description>Network Managment Work Assignemnt Sensor</Description>
+    <SerialFilePath>/etc/temperature</SerialFilePath>
+  </Sensor>
+</SensorCatalogue>
