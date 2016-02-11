@@ -14,6 +14,7 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.snmp4j.util.DefaultPDUFactory;
 
 public class SNMPManager {
 
@@ -51,11 +52,18 @@ public class SNMPManager {
    * and the listen() method listens for answers.
    * @throws IOException
    */
-  void start() throws IOException {
-    TransportMapping transport = new DefaultUdpTransportMapping();
-    snmp = new Snmp(transport);
-    // Do not forget this line!
-    transport.listen();
+  void start() {
+    TransportMapping transport;
+    try {
+      transport = new DefaultUdpTransportMapping();
+      snmp = new Snmp(transport);
+      // Do not forget this line!
+      transport.listen();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
   }
 
   /**

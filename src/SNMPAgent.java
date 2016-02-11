@@ -3,11 +3,13 @@ import java.io.File;
 import java.io.IOException;
 
 import org.snmp4j.TransportMapping;
+import org.snmp4j.agent.AgentConfigManager;
 import org.snmp4j.agent.BaseAgent;
 import org.snmp4j.agent.CommandProcessor;
 import org.snmp4j.agent.DuplicateRegistrationException;
 import org.snmp4j.agent.MOGroup;
 import org.snmp4j.agent.ManagedObject;
+import org.snmp4j.agent.mo.DefaultMOFactory;
 import org.snmp4j.agent.mo.MOTableRow;
 import org.snmp4j.agent.mo.snmp.RowStatus;
 import org.snmp4j.agent.mo.snmp.SnmpCommunityMIB;
@@ -38,7 +40,7 @@ public class SNMPAgent extends BaseAgent {
    * @throws IOException
    */
 
-  public SNMPAgent(String address) throws IOException {
+  public SNMPAgent(String address ) throws IOException {
 
     /**
      * Creates a base agent with boot-counter, config file, and a
@@ -146,17 +148,22 @@ public class SNMPAgent extends BaseAgent {
    *
    * @throws IOException
    */
-  public void start() throws IOException {
 
+  public void initialize () throws IOException{
     init();
-    // This method reads some old config from a file and causes
-    // unexpected behavior.
-    // loadConfig(ImportModes.REPLACE_CREATE);
     addShutdownHook();
     getServer().addContext(new OctetString("public"));
     finishInit();
-    run();
     sendColdStartNotification();
+  }
+
+  public void start()  {
+
+    super.run();
+    while(super.agentState == super.STATE_RUNNING){
+
+    }
+
   }
 
   /**
@@ -174,4 +181,15 @@ public class SNMPAgent extends BaseAgent {
     moGroup.unregisterMOs(server, getContext(moGroup));
   }
 
+  public static void main(String[] args) throws IOException, DuplicateRegistrationException {
+    GredesSensorMib sensores = new GredesSensorMib(DefaultMOFactory.getInstance());
+    SNMPAgent agent = null;
+    agent =  new SNMPAgent("0.0.0.0/2001");
+    agent.initialize();
+    sensores.registerMOs(agent.getServer(), agent.getDefaultContext());
+    sensores.add_sensor("temperatura",0);
+    sensores.add_sensor("mais 1 sensor",12);
+    sensores.add_sensor("temp",0);
+    agent.start();
+  }
 }
