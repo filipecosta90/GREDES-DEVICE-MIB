@@ -3,11 +3,6 @@
   <Sensor>
     <Type>Temperature</Type>
     <Description>Network Managment Work Assignemnt Temperature Sensor</Description>
-    <SerialFilePath>/etc/temperature</SerialFilePath>
-  </Sensor>
-  <Sensor>
-    <Type>Humidity</Type>
-    <Description>Network Managment Work Assignemnt Humidity Sensor</Description>
-    <SerialFilePath>/etc/humidity</SerialFilePath>
+    <SerialFilePath>/home/pi/GREDES-DEVICE-MIB/snmp_sensor_temperature</SerialFilePath>
   </Sensor>
 </SensorCatalogue>
