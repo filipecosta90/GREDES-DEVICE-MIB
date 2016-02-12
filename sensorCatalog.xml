@@ -2,7 +2,12 @@
 <SensorCatalogue>
   <Sensor>
     <Type>Temperature</Type>
-    <Description>Network Managment Work Assignemnt Sensor</Description>
+    <Description>Network Managment Work Assignemnt Temperature Sensor</Description>
     <SerialFilePath>/etc/temperature</SerialFilePath>
+  </Sensor>
+  <Sensor>
+    <Type>Humidity</Type>
+    <Description>Network Managment Work Assignemnt Humidity Sensor</Description>
+    <SerialFilePath>/etc/humidity</SerialFilePath>
   </Sensor>
 </SensorCatalogue>

@@ -99,20 +99,36 @@ public class SNMPAgent extends BaseAgent {
    */
   @Override
     protected void addViews(VacmMIB vacm) {
-      vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(
-            "cpublic"), new OctetString("v1v2group"),
+      vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, 
+    		  new OctetString("cpublic"),
+    		  new OctetString("v1v2group"),
           StorageType.nonVolatile);
 
       vacm.addAccess(new OctetString("v1v2group"), new OctetString("public"),
-          SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV,
-          MutableVACM.VACM_MATCH_EXACT, new OctetString("fullReadView"),
-          new OctetString("fullWriteView"), new OctetString(
-            "fullNotifyView"), StorageType.nonVolatile);
-
-      vacm.addViewTreeFamily(new OctetString("fullReadView"), new OID("1.3"),
-          new OctetString(), VacmMIB.vacmViewIncluded,
+          SecurityModel.SECURITY_MODEL_ANY, 
+          SecurityLevel.NOAUTH_NOPRIV,
+          MutableVACM.VACM_MATCH_EXACT, 
+          new OctetString("fullReadView"), // read permission granted
+          new OctetString("fullWriteView"),  // write permission granted
+          new OctetString("fullNotifyView"), // notify permission granted
           StorageType.nonVolatile);
 
+      vacm.addViewTreeFamily(new OctetString("fullReadView"), 
+          new OID("1.3"),
+          new OctetString(), 
+          VacmMIB.vacmViewIncluded,
+          StorageType.nonVolatile);
+      
+      vacm.addViewTreeFamily(new OctetString("fullWriteView"), 
+              new OID("1.3"),
+              new OctetString(), 
+              VacmMIB.vacmViewIncluded,
+              StorageType.nonVolatile);
+      vacm.addViewTreeFamily(new OctetString("fullNotifyView"), 
+              new OID("1.3"),
+              new OctetString(), 
+              VacmMIB.vacmViewIncluded,
+              StorageType.nonVolatile);
     }
 
   /**
@@ -121,7 +137,6 @@ public class SNMPAgent extends BaseAgent {
   @Override
     protected void unregisterManagedObjects() {
       // TODO Auto-generated method stub
-
     }
 
   /**
@@ -130,9 +145,9 @@ public class SNMPAgent extends BaseAgent {
   @Override
     protected void registerManagedObjects() {
       // TODO Auto-generated method stub
-
     }
 
+  @Override
   protected void initTransportMappings() throws IOException {
     transportMappings = new TransportMapping[1];
     Address addr = GenericAddress.parse(address);
@@ -162,6 +177,7 @@ public class SNMPAgent extends BaseAgent {
     	System.out.println("Agent running on: " + this.address);
     }
     while(super.agentState == super.STATE_RUNNING){
+    	
     }
   }
 
@@ -186,10 +202,8 @@ public class SNMPAgent extends BaseAgent {
     agent =  new SNMPAgent("0.0.0.0/2001");
     agent.initialize();
     sensors.registerMOs(agent.getServer(), agent.getDefaultContext());
-    sensors.initializeSensorsXML("sensorCatalog.xml");
-   /* sensores.add_sensor("temperatura",0);
-    sensores.add_sensor("mais 1 sensor",12);
-    sensores.add_sensor("temp",0);*/
+    int totalInitializedSensors = sensors.initializeSensorsXML("sensorCatalog.xml");
+    System.out.println("Initilized GRedesSensorMib Table with " + totalInitializedSensors + " sensors");
     agent.start();
   }
 }
