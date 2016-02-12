@@ -32,6 +32,7 @@ import org.snmp4j.transport.TransportMappings;
 
 public class SNMPAgent extends BaseAgent {
 
+  private GredesSensorMib sensors;
   private String address;
 
   /**
@@ -177,7 +178,7 @@ public class SNMPAgent extends BaseAgent {
     	System.out.println("Agent running on: " + this.address);
     }
     while(super.agentState == super.STATE_RUNNING){
-    	
+    	sensors.updateSensorsData();
     }
   }
 
@@ -197,12 +198,12 @@ public class SNMPAgent extends BaseAgent {
   }
 
   public static void main(String[] args) throws IOException, DuplicateRegistrationException {
-    GredesSensorMib sensors = new GredesSensorMib(DefaultMOFactory.getInstance());
     SNMPAgent agent = null;
     agent =  new SNMPAgent("0.0.0.0/2001");
+    agent.sensors = new GredesSensorMib(DefaultMOFactory.getInstance());
     agent.initialize();
-    sensors.registerMOs(agent.getServer(), agent.getDefaultContext());
-    int totalInitializedSensors = sensors.initializeSensorsXML("sensorCatalog.xml");
+    agent.sensors.registerMOs(agent.getServer(), agent.getDefaultContext());
+    int totalInitializedSensors = agent.sensors.initializeSensorsXML("sensorCatalog.xml");
     System.out.println("Initilized GRedesSensorMib Table with " + totalInitializedSensors + " sensors");
     agent.start();
   }

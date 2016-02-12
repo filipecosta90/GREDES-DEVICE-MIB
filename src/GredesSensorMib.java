@@ -168,27 +168,6 @@ public class GredesSensorMib  implements MOGroup {
   }
 
   public MOScalar<Integer32> getGestaoRedesSensorTableEntrySensorValue(Integer32 index) {
-    String fileToOpen = this.SerialFilePathMap.get(index);
-    System.out.println ("FIle to open: " + fileToOpen);
-    FileInputStream fstream;
-    try {
-      fstream = new FileInputStream(fileToOpen);
-      BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-      String strLine;
-      //Read File Line By Line
-      while ((strLine = br.readLine()) != null)   {
-        // Print the content on the console
-        System.out.println (strLine);
-      }
-      //Close the input stream
-      br.close();
-    } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
     return gestaoRedesSensorTableEntrySensorValue;
   }
 
@@ -407,6 +386,7 @@ public class GredesSensorMib  implements MOGroup {
     }
     return numberSensors;  
   }
+  
 
   public void add_sensor( String sensorType, int value){
     Variable[] vars = new Variable[4];
@@ -417,5 +397,31 @@ public class GredesSensorMib  implements MOGroup {
     MOMutableTableModel model = (MOMutableTableModel) gestaoRedesSensorTableEntry.getModel();
     model.addRow(new DefaultMOMutableRow2PC(new OID(new int[] {actualIndex}), vars));
     actualIndex++;
+  }
+  
+  public void updateSensorsData (){
+	  for (Integer index : SerialFilePathMap.keySet()){
+		  String fileToOpen = this.SerialFilePathMap.get(index);
+		    System.out.println ("FIle to open: " + fileToOpen);
+		    FileInputStream fstream;
+		    try {
+		      fstream = new FileInputStream(fileToOpen);
+		      BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+		      String strLine;
+		      //Read File Line By Line
+		      while ((strLine = br.readLine()) != null)   {
+		        // Print the content on the console
+		        System.out.println (strLine);
+		      }
+		      //Close the input stream
+		      br.close();
+		    } catch (FileNotFoundException e) {
+		      // TODO Auto-generated catch block
+		      e.printStackTrace();
+		    } catch (IOException e) {
+		      // TODO Auto-generated catch block
+		      e.printStackTrace();
+		    }
+	  }
   }
 }
