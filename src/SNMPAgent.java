@@ -101,8 +101,8 @@ public class SNMPAgent extends BaseAgent {
   @Override
     protected void addViews(VacmMIB vacm) {
       vacm.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, 
-    		  new OctetString("cpublic"),
-    		  new OctetString("v1v2group"),
+          new OctetString("cpublic"),
+          new OctetString("v1v2group"),
           StorageType.nonVolatile);
 
       vacm.addAccess(new OctetString("v1v2group"), new OctetString("public"),
@@ -119,17 +119,17 @@ public class SNMPAgent extends BaseAgent {
           new OctetString(), 
           VacmMIB.vacmViewIncluded,
           StorageType.nonVolatile);
-      
+
       vacm.addViewTreeFamily(new OctetString("fullWriteView"), 
-              new OID("1.3"),
-              new OctetString(), 
-              VacmMIB.vacmViewIncluded,
-              StorageType.nonVolatile);
+          new OID("1.3"),
+          new OctetString(), 
+          VacmMIB.vacmViewIncluded,
+          StorageType.nonVolatile);
       vacm.addViewTreeFamily(new OctetString("fullNotifyView"), 
-              new OID("1.3"),
-              new OctetString(), 
-              VacmMIB.vacmViewIncluded,
-              StorageType.nonVolatile);
+          new OID("1.3"),
+          new OctetString(), 
+          VacmMIB.vacmViewIncluded,
+          StorageType.nonVolatile);
     }
 
   /**
@@ -149,13 +149,13 @@ public class SNMPAgent extends BaseAgent {
     }
 
   @Override
-  protected void initTransportMappings() throws IOException {
-    transportMappings = new TransportMapping[1];
-    Address addr = GenericAddress.parse(address);
-    TransportMapping tm = TransportMappings.getInstance()
-      .createTransportMapping(addr);
-    transportMappings[0] = tm;
-  }
+    protected void initTransportMappings() throws IOException {
+      transportMappings = new TransportMapping[1];
+      Address addr = GenericAddress.parse(address);
+      TransportMapping tm = TransportMappings.getInstance()
+        .createTransportMapping(addr);
+      transportMappings[0] = tm;
+    }
 
   /**
    * Start method invokes some initialization methods needed to start the
@@ -175,10 +175,16 @@ public class SNMPAgent extends BaseAgent {
   public void start()  {
     super.run();
     if (super.agentState == super.STATE_RUNNING){
-    	System.out.println("Agent running on: " + this.address);
+      System.out.println("Agent running on: " + this.address);
     }
     while(super.agentState == super.STATE_RUNNING){
-    	sensors.updateSensorsData();
+      sensors.updateSensorsData();
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
   }
 

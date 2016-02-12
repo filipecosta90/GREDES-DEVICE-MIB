@@ -13,10 +13,12 @@ import org.snmp4j.agent.mo.MOAccessImpl;
 import org.snmp4j.agent.mo.MOColumn;
 import org.snmp4j.agent.mo.MOFactory;
 import org.snmp4j.agent.mo.MOMutableTableModel;
+import org.snmp4j.agent.mo.MOMutableTableRow;
 import org.snmp4j.agent.mo.MOScalar;
 import org.snmp4j.agent.mo.MOTable;
 import org.snmp4j.agent.mo.MOTableIndex;
 import org.snmp4j.agent.mo.MOTableIndexValidator;
+import org.snmp4j.agent.mo.MOTableRow;
 import org.snmp4j.agent.mo.MOTableRowEvent;
 import org.snmp4j.agent.mo.MOTableRowFactory;
 import org.snmp4j.agent.mo.MOTableSubIndex;
@@ -34,9 +36,10 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class GredesSensorMib  implements MOGroup {
-  
+
   // Factory
   private MOFactory moFactory =  DefaultMOFactory.getInstance();
 
@@ -386,7 +389,7 @@ public class GredesSensorMib  implements MOGroup {
     }
     return numberSensors;  
   }
-  
+
 
   public void add_sensor( String sensorType, int value){
     Variable[] vars = new Variable[4];
@@ -398,30 +401,42 @@ public class GredesSensorMib  implements MOGroup {
     model.addRow(new DefaultMOMutableRow2PC(new OID(new int[] {actualIndex}), vars));
     actualIndex++;
   }
-  
+
   public void updateSensorsData (){
-	  for (Integer index : SerialFilePathMap.keySet()){
-		  String fileToOpen = this.SerialFilePathMap.get(index);
-		    System.out.println ("FIle to open: " + fileToOpen);
-		    FileInputStream fstream;
-		    try {
-		      fstream = new FileInputStream(fileToOpen);
-		      BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-		      String strLine;
-		      //Read File Line By Line
-		      while ((strLine = br.readLine()) != null)   {
-		        // Print the content on the console
-		        System.out.println (strLine);
-		      }
-		      //Close the input stream
-		      br.close();
-		    } catch (FileNotFoundException e) {
-		      // TODO Auto-generated catch block
-		      e.printStackTrace();
-		    } catch (IOException e) {
-		      // TODO Auto-generated catch block
-		      e.printStackTrace();
-		    }
-	  }
+    for (Integer index : SerialFilePathMap.keySet()){
+      String fileToOpen = this.SerialFilePathMap.get(index);
+      System.out.println ("FIle to open: " + fileToOpen);
+      FileInputStream fstream;
+      try {
+        fstream = new FileInputStream(fileToOpen);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+        String strLine;
+        //Read File 1st line
+        if ((strLine = br.readLine()) != null)   {
+          Integer temperatura = Integer.parseInt(strLine);
+
+          MOMutableTableModel model = (MOMutableTableModel) gestaoRedesSensorTableEntry.getModel();
+          int pos = 1;
+          for (Iterator<MOTableRow> i = model.iterator(); i.hasNext() && pos < index ;) {
+            MOMutableTableRow mot = (MOMutableTableRow) i.next();
+            if (pos == index) {
+              mot.setValue(this.colGestaoRedesSensorTableEntrySensorValue , new Integer32(temperatura));
+              java.util.Date date= new java.util.Date();
+              TimeTicks timeT = new TimeTicks(date.getTime());
+              mot.setValue(this.colGestaoRedesSensorTableEntrySensorValueTimeStamp , timeT );
+              System.out.println ("updating " + index + " to " + " ºC at:" + timeT.toString());
+            }
+          }		       
+        }
+        //Close the input stream
+        br.close();
+      } catch (FileNotFoundException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
   }
 }
