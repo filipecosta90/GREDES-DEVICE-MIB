@@ -3,6 +3,6 @@
   <Sensor>
     <Type>Temperature</Type>
     <Description>Network Managment Work Assignemnt Temperature Sensor</Description>
-    <SerialFilePath>/home/pi/GREDES-DEVICE-MIB/snmp_sensor_temperature</SerialFilePath>
+    <SerialFilePath>snmp_sensor_temperature</SerialFilePath>
   </Sensor>
 </SensorCatalogue>

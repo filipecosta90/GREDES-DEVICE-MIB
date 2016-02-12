@@ -23,6 +23,9 @@ import org.snmp4j.agent.mo.MOTableRowEvent;
 import org.snmp4j.agent.mo.MOTableRowFactory;
 import org.snmp4j.agent.mo.MOTableSubIndex;
 import org.snmp4j.agent.mo.MOTableRowListener;
+import org.snmp4j.agent.mo.snmp.SNMPv2MIB;
+import org.snmp4j.agent.mo.snmp.SysUpTime;
+import org.snmp4j.agent.mo.snmp.TimeStamp;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -402,10 +405,10 @@ public class GredesSensorMib  implements MOGroup {
     actualIndex++;
   }
 
-  public void updateSensorsData (){
+  public void updateSensorsData (MOServer server, OctetString context){	
     for (Integer index : SerialFilePathMap.keySet()){
       String fileToOpen = this.SerialFilePathMap.get(index);
-      System.out.println ("FIle to open: " + fileToOpen);
+      System.out.println ("Getting sensor value from :" + fileToOpen);
       FileInputStream fstream;
       try {
         fstream = new FileInputStream(fileToOpen);
@@ -413,18 +416,15 @@ public class GredesSensorMib  implements MOGroup {
         String strLine;
         //Read File 1st line
         if ((strLine = br.readLine()) != null)   {
-          Integer temperatura = Integer.parseInt(strLine);
-
+          Double temperatura = Double.parseDouble(strLine);
           MOMutableTableModel model = (MOMutableTableModel) gestaoRedesSensorTableEntry.getModel();
           int pos = 1;
-          for (Iterator<MOTableRow> i = model.iterator(); i.hasNext() && pos < index ;) {
+          for (Iterator<MOTableRow> i = model.iterator(); i.hasNext() && pos <= index ;) {
             MOMutableTableRow mot = (MOMutableTableRow) i.next();
-            if (pos == index) {
-              mot.setValue(this.colGestaoRedesSensorTableEntrySensorValue , new Integer32(temperatura));
-              java.util.Date date= new java.util.Date();
-              TimeTicks timeT = new TimeTicks(date.getTime());
-              mot.setValue(this.colGestaoRedesSensorTableEntrySensorValueTimeStamp , timeT );
-              System.out.println ("updating " + index + " to " + " ºC at:" + timeT.toString());
+            if (pos == index) {     	
+              mot.setValue( 2  , new Integer32(temperatura.intValue()));
+              mot.setValue( 3 , SNMPv2MIB.getSysUpTime(context).get() );
+              System.out.println ("\tUpdating " + index + " to " + temperatura.intValue() + " ºC at:" + SNMPv2MIB.getSysUpTime(context).get().toString());
             }
           }		       
         }

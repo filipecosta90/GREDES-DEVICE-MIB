@@ -178,7 +178,7 @@ public class SNMPAgent extends BaseAgent {
       System.out.println("Agent running on: " + this.address);
     }
     while(super.agentState == super.STATE_RUNNING){
-      sensors.updateSensorsData();
+      sensors.updateSensorsData(this.getServer(), this.getDefaultContext());
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
