@@ -1,0 +1,5 @@
+snmpwalk -v2c -c public 192.168.1.115:2001 1.3.6.1.2.1.47.1.1.1.1
+SNMPv2-SMI::mib-2.47.1.1.1.1.2.1 = INTEGER: 1
+SNMPv2-SMI::mib-2.47.1.1.1.1.3.1 = STRING: "Temperature"
+SNMPv2-SMI::mib-2.47.1.1.1.1.4.1 = INTEGER: 41
+SNMPv2-SMI::mib-2.47.1.1.1.1.5.1 = Timeticks: (197161) 0:32:51.61

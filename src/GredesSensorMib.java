@@ -3,7 +3,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 
 import org.snmp4j.smi.*;
 import org.snmp4j.agent.*;
@@ -24,8 +23,6 @@ import org.snmp4j.agent.mo.MOTableRowFactory;
 import org.snmp4j.agent.mo.MOTableSubIndex;
 import org.snmp4j.agent.mo.MOTableRowListener;
 import org.snmp4j.agent.mo.snmp.SNMPv2MIB;
-import org.snmp4j.agent.mo.snmp.SysUpTime;
-import org.snmp4j.agent.mo.snmp.TimeStamp;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -112,7 +109,6 @@ public class GredesSensorMib  implements MOGroup {
   //added new variables
   private int actualIndex=1;
   private HashMap <Integer, String> SerialFilePathMap = new HashMap<Integer,String>();
-  private rowListner RowList;
 
   /**
    * Constructs a GredesSensorMib instance without actually creating its
